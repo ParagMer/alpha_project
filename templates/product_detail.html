@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        {% if product%}
+            
+            <h1>{{ product.product__title }}</h1>
+            <p>Description: {{ product.product__description }}</p>
+            <p>Color: {{ product.name }}</p>
+            <p>Price: ${{ product.price }}</p>
+            <img src="/media/{{ product.image }}" class="img-fluid mb-3" alt="Product Image">
+            </div>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        {% endif %}
+    </div>
+</body>
+</html>

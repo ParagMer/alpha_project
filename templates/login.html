@@ -1,0 +1,93 @@
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<form class="form-horizontal" method="POST" id="loginForm">
+    {% csrf_token %}
+  <fieldset>
+    <div id="legend">
+      <legend class="">Login</legend>
+    </div>
+ 
+    <div class="control-group">
+      <!-- E-mail -->
+      <label class="control-label" for="email">E-mail</label>
+      <div class="controls">
+        <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
+        <p class="help-block">Please provide your E-mail</p>
+        <label id="emailError" class="error" style="display: none; color: red;"></label>
+    </div>
+    </div>
+ 
+    <div class="control-group">
+      <!-- Password-->
+      <label class="control-label" for="password">Password</label>
+      <div class="controls">
+        <input type="password" id="password" name="password" placeholder="" class="input-xlarge">
+        <p class="help-block">Password should be at least 4 characters</p>
+        <label id="passwordError" class="error" style="display: none; color: red;"></label>
+      </div>
+    </div>
+ 
+    <div class="control-group">
+      <!-- Button -->
+      <div class="controls">
+        <button class="btn btn-success" type="submit">Login</button>
+        <div id="responseMessage"></div>
+      </div>
+    </div>
+    
+  </fieldset>
+</form>
+
+<script>
+    function loginUser(event) {
+        event.preventDefault();
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        // Clear previous error messages
+        document.getElementById('emailError').style.display = 'none';
+        document.getElementById('passwordError').style.display = 'none';
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "login" %}',
+            data: {
+                email: email,
+                password: password,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function(response) {
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                window.location.href = '{% url "dashboard" %}';
+            },
+            error: function(xhr, status, error) {
+                const response = xhr.responseJSON;
+                
+                if (response.error.email) {
+                    document.getElementById('emailError').innerText = response.error.email;
+                    document.getElementById('emailError').style.display = 'block';
+                } else {
+                    document.getElementById('emailError').style.display = 'none';
+                }
+        
+                if (response.error.password) {
+                    document.getElementById('passwordError').innerText = response.error.password;
+                    document.getElementById('passwordError').style.display = 'block';
+                } else {
+                    document.getElementById('passwordError').style.display = 'none';
+                }
+        
+                if (!response.error.email && !response.error.password) {
+                    document.getElementById('responseMessage').innerText = response.message;
+                }
+            }
+        });
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', loginUser);
+</script>

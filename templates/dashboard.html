@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .product-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 200px;
+        }
+        
+        .product-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        
+        .product-box h2 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        
+        .product-box p {
+            font-size: 1em;
+            color: #333;
+        }
+        
+        .product-box button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        
+        .product-box button:hover {
+            background-color: #0056b3;
+        }
+        
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .pagination .step-links {
+            display: inline-block;
+        }
+        
+        .pagination .step-links a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        
+        .pagination .step-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .pagination .current {
+            margin: 0 5px;
+            font-weight: bold;
+        }
+        
+        .add-product-button {
+            display: block;
+            text-align: center;
+            margin: 20px;
+        }
+        
+        .add-product-button a {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.2em;
+        }
+        
+        .add-product-button a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="add-product-button">
+        <a href="/product/add/">Add Product</a>
+    </div>
+
+    <div class="product-container">
+        {% for color in page_obj %}
+        <div class="product-box">
+            <img src="/media/{{ color.image }}" alt="{{ color.product__title }}">
+            <h2>{{ color.product__title }}</h2>
+            <p>{{ color.price }}</p>
+            <button onclick="viewMore('{{ color.product__id }}')">View More</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <script>
+        function viewMore(productId) {
+            // Redirect to a detailed product page or open a modal
+            window.location.href = '/product/edit/' + productId + '/';
+        }
+    </script>
+</body>
+</html>

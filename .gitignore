@@ -1,0 +1,4 @@
+env
+alpha/__pycache__
+alpha_app/__pycache__
+alpha_app/migrations
